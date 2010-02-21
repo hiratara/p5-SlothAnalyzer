@@ -1,27 +1,50 @@
-This is Perl module SlothAnalyzer.
+NAME
+    SlothAnalyzer - analyzes the git usages.
 
-INSTALLATION
+SYNOPSIS
+    Make sloth_contribution.yaml and run sloth_contribution. You'll get
+    following output;
 
-SlothAnalyzer installation is straightforward. If your CPAN shell is set up,
-you should just be able to do
+      % sloth_contribution
+      SINCE: 1 month ago
 
-    % cpan SlothAnalyzer
+      [hiratara]
+      commits 37
+      files   465
+      inserts 2300
+      deletes 14537
 
-Download it, unpack it, then build it as per the usual:
+      [honma]
+      commits 11
+      files   19
+      inserts 103
+      deletes 65
 
-    % perl Makefile.PL
-    % make && make test
+    You can also specify the period for summary by the same format as the
+    'git log --since' format.
 
-Then install it:
+      % sloth_contribution '1 week'
+      SINCE: 1 week
+      [hiratara]
+      commits 9
+      files   19
+      inserts 169
+      deletes 110
 
-    % make install
+      [honma]
+      commits 2
+      files   4
+      inserts 5
+      deletes 7
 
-DOCUMENTATION
+DESCRIPTION
+    SlothAnalyzer is for my own use. You may not use this module.
 
-SlothAnalyzer documentation is available as in POD. So you can do:
+AUTHOR
+    hiratara <hiratara@cpan.org>
 
-    % perldoc SlothAnalyzer
+SEE ALSO
+LICENSE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 
-to read the documentation online with your favorite pager.
-
-hiratara

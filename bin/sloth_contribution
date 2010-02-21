@@ -1,0 +1,54 @@
+#!/usr/local/bin/perl
+use strict;
+use warnings;
+use Capture::Tiny qw/capture/;
+use File::chdir;
+use YAML::Syck;
+
+$ENV{PERL5LIB} = '';  # XXX For me to run 'git svn' without local::lib.
+
+sub attribute_stat($$$){
+	my ($git_dir, $auther, $since) = @_;
+	local $CWD = $git_dir;
+
+	my $ret = system('git', 'svn', 'fetch') >> 8;
+	die $ret unless $ret == 0;
+
+	my ($out, $err) = capture {
+		my $ret = system 'git', 'log', '--all', '--oneline', '--shortstat', 
+		                 "--since='$since'", "--author=$auther";
+		die $ret unless $ret == 0;
+	};
+	die $err if $err;
+
+	my ( $commits, $files, $inserts, $deletes ) = ( 0, 0, 0, 0 );
+	for(split /\n/, $out){
+		if(/^\d+/){
+			$commits++;
+			next;
+		}
+		$files   += $1 if /(\d+) files/;
+		$inserts += $1 if /(\d+) insertions/;
+		$deletes += $1 if /(\d+) deletions/;
+	}
+
+	return {
+		commits => $commits, 
+		files   => $files, 
+		inserts => $inserts, 
+		deletes => $deletes
+	};
+}
+
+my $since  = $ARGV[0] || '1 month ago';
+
+(my $yaml = $0) =~ s/$/\.yaml/;
+my $conf = LoadFile $yaml;
+
+print "SINCE: $since\n";
+for my $author ( @{ $conf->{authors} } ){
+	my $sum = attribute_stat $conf->{git_dir}, $author, $since;
+	print "[$author]\n";
+	print "$_	$sum->{$_}\n" for qw/commits files inserts deletes/;
+	print "\n";
+}
