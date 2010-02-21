@@ -51,6 +51,9 @@ You can also specify the period for summary by the same format as the
 
 SlothAnalyzer is for my own use. You may not use this module.
 
+If you just want to summarize the number of commits by authors 
+from all project's history, use 'git shortlog'.
+
 =head1 AUTHOR
 
 hiratara E<lt>hiratara@cpan.orgE<gt>
